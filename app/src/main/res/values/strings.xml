@@ -10,4 +10,10 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="preference_file_key" />
+    <string name="emailHint">email</string>
+    <string name="passwordHint">password</string>
+    <string name="TextLoginButton">Login</string>
+    <string name="loginTitleText">TASK MANAGER APP</string>
+    <string name="contentDescriptionLogo">Todo by Pixelmeetup from www.flaticon.com</string>
 </resources>
