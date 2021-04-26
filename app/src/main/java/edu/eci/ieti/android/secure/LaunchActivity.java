@@ -21,7 +21,6 @@ public class LaunchActivity extends AppCompatActivity {
         if(sharedPref.contains(TOKEN_KEY)){
             //TODO go to MainActivity
         }else{
-            //TODO go to LoginActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
