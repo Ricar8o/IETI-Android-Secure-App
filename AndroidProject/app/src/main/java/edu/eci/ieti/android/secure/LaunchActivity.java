@@ -14,15 +14,14 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_launch);
         SharedPreferences sharedPref =
                 getSharedPreferences( getString( R.string.preference_file_key ), Context.MODE_PRIVATE );
-
+        Intent intent;
         if(sharedPref.contains(TOKEN_KEY)){
-            //TODO go to MainActivity
+            intent = new Intent(this, MainActivity.class);
         }else{
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, LoginActivity.class);
         }
+        startActivity(intent);
     }
 }
