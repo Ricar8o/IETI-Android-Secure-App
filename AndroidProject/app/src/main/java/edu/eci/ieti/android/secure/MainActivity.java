@@ -1,5 +1,8 @@
 package edu.eci.ieti.android.secure;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -59,5 +62,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void onClickButtonLogout(View view){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString( R.string.preference_file_key ),MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("TOKEN_KEY");
+        editor.commit();
+
+        Intent intent = new Intent(this, LaunchActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 }
