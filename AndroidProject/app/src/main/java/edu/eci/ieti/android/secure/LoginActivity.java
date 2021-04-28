@@ -51,15 +51,18 @@ public class LoginActivity extends AppCompatActivity {
             {
                 try
                 {
+                    // Default credentials are "test@mail.com" and "password"
                     Response<Token> response =
-                            authService.login( new LoginWrapper( "test@mail.com", "password" ) ).execute();
-                    Token token = response.body();
+                            authService.login( new LoginWrapper( email, password ) ).execute();
 
-                    SharedPreferences sharedPreferences = getSharedPreferences(getString( R.string.preference_file_key ),MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("TOKEN_KEY", token.getAccessToken());
-                    editor.commit();
-                    startLaunch();
+                    if (response.isSuccessful()) {
+                        Token token = response.body();
+                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("TOKEN_KEY", token.getAccessToken());
+                        editor.commit();
+                        startLaunch();
+                    }
                 }
                 catch ( IOException e )
                 {

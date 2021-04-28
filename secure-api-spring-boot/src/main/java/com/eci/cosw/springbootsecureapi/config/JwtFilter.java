@@ -24,47 +24,48 @@ public class JwtFilter
 
     public void doFilter( final ServletRequest servletRequest, final ServletResponse servletResponse,
                           final FilterChain filterChain )
-        throws IOException, ServletException
+        throws IOException
     {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final String authHeader = request.getHeader( "authorization" );
+        try{
 
-        if ( "OPTIONS".equals( request.getMethod() ) )
-        {
-            response.setStatus( HttpServletResponse.SC_OK );
+            if ( "OPTIONS".equals( request.getMethod() ) ){
+                response.setStatus( HttpServletResponse.SC_OK );
 
-            filterChain.doFilter( servletRequest, response );
-        }
-        else
-        {
-
-            if ( authHeader == null || !authHeader.startsWith( "Bearer " ) )
-            {
-                throw new ServletException( "Missing or invalid Authorization header" );
+                filterChain.doFilter( servletRequest, response );
             }
+            else{
 
-            final String token = authHeader.substring( 7 );
-
-            try
-            {
-                final Claims claims = Jwts.parser().setSigningKey( "secretkey" ).parseClaimsJws( token ).getBody();
-                request.setAttribute( "claims", claims );
-
-                String role = (String) claims.get( "role" );
-                String path = request.getServletPath();
-                if ( path.contains( "admin" ) && !( RolesEnum.valueOf( role ) == RolesEnum.ADMIN ) )
-                {
-                    throw new ServletException( "Insufficient Privileges" );
+                if ( authHeader == null || !authHeader.startsWith( "Bearer " ) ){
+                    throw new ServletException( "Missing or invalid Authorization header" );
                 }
-            }
-            catch ( final SignatureException e )
-            {
-                throw new ServletException( "Invalid token" );
-            }
 
-            filterChain.doFilter( servletRequest, response );
+                final String token = authHeader.substring( 7 );
+
+                try{
+                    final Claims claims = Jwts.parser().setSigningKey( "secretkey" ).parseClaimsJws( token ).getBody();
+                    request.setAttribute( "claims", claims );
+
+                    String role = (String) claims.get( "role" );
+                    String path = request.getServletPath();
+                    if ( path.contains( "admin" ) && !( RolesEnum.valueOf( role ) == RolesEnum.ADMIN ) )
+                    {
+                        throw new ServletException( "Insufficient Privileges" );
+                    }
+                }
+                catch ( final SignatureException e ){
+                    throw new ServletException( "Invalid token" );
+                }
+
+                filterChain.doFilter( servletRequest, response );
+            }   
+        }catch (ServletException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
+            response.getWriter().flush();
         }
     }
 }
